@@ -13,5 +13,6 @@ public interface ArticleService extends IService<Article> {
 
     public Article getArticleDetil(Integer articleId);
 
+    public Integer getArticleCounts();
 
 }

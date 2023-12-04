@@ -2,6 +2,7 @@ package com.sort.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sort.entity.Article;
@@ -16,19 +17,26 @@ import java.util.List;
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper,Article> implements ArticleService  {
     @Override
     public List<Article> getArticleList(Integer page, Integer pagesize) {
-        QueryWrapper<Article> wrapperArticle = new QueryWrapper<>();
-        wrapperArticle.select("Id","Title","Introduce","Content","StartTime","EndTime");
         Page<Article> articlePage = new Page<> (page,pagesize);
-        List<Article> articleList = baseMapper.selectList (wrapperArticle);
-        for (Article a:articleList
-             ) {
-            System.out.println (a );
-        }
+        QueryWrapper<Article> wrapperArticle = new QueryWrapper<>();
+        wrapperArticle.select("Id","Title","Introduce","Content","StartTime","EndTime").orderByDesc("StartTime");
+        baseMapper.selectPage(articlePage, wrapperArticle);
+        List<Article> articleList = articlePage.getRecords();
         return articleList;
     }
 
     @Override
     public Article getArticleDetil(Integer articleId) {
-        return null;
+        QueryWrapper<Article> wrapperArticle = new QueryWrapper<>();
+        wrapperArticle.eq("id",articleId);
+        Article article = baseMapper.selectById(articleId);
+        return article;
+    }
+
+    @Override
+    public Integer getArticleCounts() {
+        QueryWrapper<Article> wrapperArticle = new QueryWrapper<>();
+        Integer articleCount = baseMapper.selectCount(wrapperArticle);
+        return articleCount;
     }
 }
