@@ -1,12 +1,10 @@
 package com.sort.controller;
 
 import com.baomidou.mybatisplus.extension.api.R;
-import com.sort.config.ResponMsg;
-import com.sort.entity.Article;
+import com.sort.Enum.ResponMsg;
 import com.sort.entity.Volunteer;
 import com.sort.service.VolunteerService;
 import io.swagger.annotations.Api;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +13,7 @@ import java.util.List;
 @RestController
 @Api(description = "志愿查询接口")
 @CrossOrigin
-@RequestMapping("/volunteer")
+@RequestMapping("api/v1/volunteer")
 public class VolunteerController {
 
     @Autowired

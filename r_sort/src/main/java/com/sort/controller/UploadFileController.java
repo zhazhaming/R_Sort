@@ -31,7 +31,7 @@ import java.util.UUID;
  */
 @RestController
 @Api(description = "识别接口")
-@RequestMapping("/recognize")
+@RequestMapping("api/v1/recognize")
 @CrossOrigin
 public class UploadFileController {
 

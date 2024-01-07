@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @Api(description = "垃圾百科接口")
 @CrossOrigin
-@RequestMapping("/sort/garbage-encyclopedia")
+@RequestMapping("api/v1/sort/garbage-encyclopedia")
 public class GarbageEncyclopediaController {
     @Autowired
     private GarbageEncyclopediaService garbageEncyclopediaService;

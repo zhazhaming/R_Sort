@@ -22,7 +22,7 @@ import java.util.List;
  * @since 2022-02-13
  */
 @RestController
-@RequestMapping("/sort/garbagetype")
+@RequestMapping("api/v1/sort/garbagetype")
 @CrossOrigin
 public class GarbageTypeController {
     @Autowired
