@@ -34,6 +34,13 @@ public class AdminController {
             R.failed (ResponMsg.ADMIN_LOGIN_PARAMERROR.msg ());
         }
         AdminVo admin = adminService.selectByNameAndPassword (username, password);
-        return R.ok (admin);
+        return admin!= null?R.ok (admin):R.failed (ResponMsg.ADMIN_NOT_EXIT_ERROR.msg ());
+    }
+
+    @PostMapping("/logout")
+    public R logout(@RequestParam String adminId){
+        if (StringUtils.isBlank (adminId)) R.failed (ResponMsg.ADMIN_NOT_EXIT_ERROR.msg ());
+        adminService.logout (adminId);
+        return R.ok (adminId);
     }
 }

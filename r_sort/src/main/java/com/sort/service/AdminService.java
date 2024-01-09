@@ -14,5 +14,5 @@ public interface AdminService extends IService<Admin> {
 
     public AdminVo selectByNameAndPassword(String username, String password);
 
-
+    public void logout(String adminId);
 }
