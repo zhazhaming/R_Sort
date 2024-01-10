@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.security.auth.Subject;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -22,25 +23,35 @@ import java.util.Date;
 @TableName("volunteer")
 public class Volunteer implements Serializable {
 
-    @TableField("Id")
-    private int Id;
+    @TableField("id")
+    @NotNull
+    private int id;
 
-    @TableField("SubjectName")
-    private String Subject;
+    @TableField("missionId")
+    @NotNull
+    private int missionId;
 
-    @TableField("Region")
-    private String Region;
+    @TableField("districtName")
+    private String districtName;
 
-    @TableField("Organize")
-    private String Organize;
+    @TableField("subject")
+    private String subject;
 
-    @TableField("Url")
-    private String Url;
+    @TableField("startDate")
+    private Date startDate;
 
-    @TableField("StartTime")
-    private Date StartTime;
+    @TableField("endDate")
+    private Date endDate;
 
-    @TableField("EndTime")
-    private Date EndTime;
+    @TableField("missionTypeName")
+    private String missionTypeName;
+
+    @TableField("missionRegionName")
+    private String missionRegionName;
+
+    @TableField("url")
+    private String url;
+
+
 
 }

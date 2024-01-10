@@ -2,6 +2,7 @@ package com.sort.controller;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.sort.Enum.ResponMsg;
+import com.sort.constant.PageConstant;
 import com.sort.entity.Volunteer;
 import com.sort.service.VolunteerService;
 import io.swagger.annotations.Api;
@@ -20,25 +21,10 @@ public class VolunteerController {
     VolunteerService volunteerService;
 
     @GetMapping("/getVolunteerList")
-    public R<List<Volunteer>> getVolunteerList(@RequestParam Integer page,
+    public R<List<Volunteer>> getVolunteerList(@RequestParam Integer pageNum,
                                             @RequestParam Integer pageSize){
-        //传参设置判断
-        if (page==null || pageSize==null){
-            R.failed(ResponMsg.VOLUNTEER_PAGESIZE_ERROR.msg());
-        }
-        //传参小于0判断
-        if (page<=0 ||pageSize <= 0){
-            if (page<=0) page = 1;
-            if (pageSize<=0) pageSize=1;
-        }
-        Integer count = volunteerService.getVolunteerCounts ();
-        if (pageSize>count) pageSize = count;
-        Integer pageLimit = count/pageSize;
-        //传参页数大于所有数据判断
-        if (page>pageLimit){
-            page = pageLimit;
-        }
-        List<Volunteer> volunteerList = volunteerService.getVolunteerList (page, pageSize);
+
+        List<Volunteer> volunteerList = volunteerService.getVolunteerList (pageNum, pageSize);
         return R.ok (volunteerList);
     }
 
