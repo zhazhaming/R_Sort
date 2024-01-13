@@ -240,7 +240,7 @@ INSERT INTO `garbage_type` VALUES (4, '有害垃圾', '有害垃圾是指存有�
 -- ----------------------------
 DROP TABLE IF EXISTS `volunteer`;
 CREATE TABLE `volunteer`  (
-                              `id` int NOT NULL AUTO_INCREMENT,
+                              `id` varchar (255) NOT NULL ,
                               `missionId` int NOT NULL,
                               `districtName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
                               `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,

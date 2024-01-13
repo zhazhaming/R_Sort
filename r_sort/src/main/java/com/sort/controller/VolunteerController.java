@@ -3,10 +3,14 @@ package com.sort.controller;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.sort.Enum.ResponMsg;
 import com.sort.constant.PageConstant;
+import com.sort.constant.VolunteerConstant;
 import com.sort.entity.Volunteer;
 import com.sort.service.VolunteerService;
 import io.swagger.annotations.Api;
+import io.swagger.models.auth.In;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,8 +33,8 @@ public class VolunteerController {
     }
 
     @GetMapping("/getVolunteerDetail")
-    public R<Volunteer> getVolunteerDetail(@RequestParam Integer volunteerId){
-        if (volunteerId==null){
+    public R<Volunteer> getVolunteerDetail(@RequestParam String volunteerId){
+        if (StringUtils.isBlank (volunteerId)){
             R.failed(ResponMsg.VOLUNTEER_ID_ERROR.msg());
         }
         Volunteer volunteerDetil = volunteerService.getVolunteerDetil (volunteerId);
@@ -44,5 +48,12 @@ public class VolunteerController {
         }
         List<Volunteer> volunteerRegionList = volunteerService.getVolunteerByRegion (region);
         return R.ok (volunteerRegionList);
+    }
+
+    @GetMapping("/reqVolunteer")
+    @Transactional
+    public R<Integer> reqVolunteer(){
+        Integer integer = volunteerService.reqVolunteer (VolunteerConstant.volunteer_request_number);
+        return  integer>=0?R.ok (integer):R.failed (ResponMsg.VOLUNTEER_REQUSET_ERROR.msg());
     }
 }

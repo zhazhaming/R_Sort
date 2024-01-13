@@ -7,6 +7,7 @@ public enum ResponMsg {
     VOLUNTEER_PAGESIZE_ERROR(507,false,"志愿者分页设置错误，请重试！！"),
     VOLUNTEER_ID_ERROR(508,false,"志愿者id错误，请重试！！"),
     VOLUNTEER_REGION_ERROR(509,false,"志愿者所在地区错误，请重试！！"),
+    VOLUNTEER_REQUSET_ERROR(512,false,"志愿者远程请求错误，请联系管理员"),
     ADMIN_LOGIN_PARAMERROR(510,false,"管理员名称和密码不能为空，请重试！！"),
     ADMIN_NOT_EXIT_ERROR(511,false,"管理员不存在或密码错误");
 

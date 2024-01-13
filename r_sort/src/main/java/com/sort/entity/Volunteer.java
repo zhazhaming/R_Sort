@@ -2,6 +2,7 @@ package com.sort.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import lombok.experimental.Accessors;
 import javax.security.auth.Subject;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -25,7 +27,7 @@ public class Volunteer implements Serializable {
 
     @TableField("id")
     @NotNull
-    private int id;
+    private String id;
 
     @TableField("missionId")
     @NotNull
@@ -38,10 +40,12 @@ public class Volunteer implements Serializable {
     private String subject;
 
     @TableField("startDate")
-    private Date startDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    private LocalDateTime startDate;
 
     @TableField("endDate")
-    private Date endDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    private LocalDateTime  endDate;
 
     @TableField("missionTypeName")
     private String missionTypeName;

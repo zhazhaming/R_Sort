@@ -10,9 +10,11 @@ public interface VolunteerService extends IService<Volunteer> {
 
     public List<Volunteer> getVolunteerList(Integer page,Integer pagesize);
 
-    public Volunteer getVolunteerDetil(Integer articleId);
+    public Volunteer getVolunteerDetil(String articleId);
 
     public Integer getVolunteerCounts();
 
     public List<Volunteer> getVolunteerByRegion(String region);
+
+    public Integer reqVolunteer(Integer  volunteerNumber);
 }
