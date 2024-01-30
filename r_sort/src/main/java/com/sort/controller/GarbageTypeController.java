@@ -42,7 +42,6 @@ public class GarbageTypeController {
     @ApiOperation(value = "模糊查询垃圾类别")
     public R getPublishCourseInfo(@PathVariable(value = "name") String name) {
         List<GarbageEncyclopedia> garbageEncyclopediaList = garbageEncyclopediaService.getByName(name);
-
         List<GarbageTypeVo> garbageTypeVos = garbageTypeService.selectList(garbageEncyclopediaList);
         return R.ok(garbageTypeVos);
     }

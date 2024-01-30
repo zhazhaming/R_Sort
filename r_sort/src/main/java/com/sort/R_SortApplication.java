@@ -10,12 +10,14 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 /**
  * @author changing
  * @create 2021-12-26 11:39
  */
+@EnableScheduling
 @SpringBootApplication
 public class R_SortApplication {
     public static void main(String[] args) {

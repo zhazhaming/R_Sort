@@ -1,25 +1,23 @@
 package com.sort.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sort.constant.PageConstant;
 import com.sort.entity.Volunteer;
-import com.sort.entity.request.VolunteerApiData;
 import com.sort.entity.request.VolunteerApiRequest;
 import com.sort.entity.vo.VolunteerVo;
 import com.sort.mapper.VolunteerMapper;
 import com.sort.service.VolunteerService;
 import com.sort.util.RestTemplateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer> implements VolunteerService {
@@ -51,12 +49,13 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
                 Volunteer::getStartDate, Volunteer::getEndDate, Volunteer::getMissionTypeName, Volunteer::getMissionRegionName, Volunteer::getUrl).orderByDesc (Volunteer::getStartDate);
         baseMapper.selectPage(volunteerPage, volunteerLambdaQueryWrapper);
         List<Volunteer> VolunteerList = volunteerPage.getRecords();
-        return VolunteerList;
+        // 获取当前时间，筛选过期数据
+        List<Volunteer> volunteerResList = VolunteerList.stream ( ).filter (v -> v.getEndDate ( ).isAfter (LocalDate.now ( ).atStartOfDay ())).collect(Collectors.toList());
+        return volunteerResList;
     }
 
     @Override
     public Volunteer getVolunteerDetil(String volunteerId) {
-
         Volunteer volunteer = this.getOne ( new LambdaQueryWrapper<Volunteer> (  ).eq (Volunteer::getId,volunteerId) );
         return volunteer;
     }
@@ -89,10 +88,8 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
 
         // 加载到数据库中
         boolean saveBatch = this.saveBatch (volunteersList, volunteersList.size ( ));
-
         if (saveBatch) return volunteersList.size ();
         else return -1;
 
     }
-
 }

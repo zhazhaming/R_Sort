@@ -6,5 +6,5 @@ package com.sort.constant;
  */
 public interface VolunteerConstant {
 
-    public final int volunteer_request_number = 30;
+    public final int volunteer_request_number = 10;
 }

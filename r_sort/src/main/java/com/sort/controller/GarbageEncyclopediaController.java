@@ -29,6 +29,7 @@ import java.util.List;
 public class GarbageEncyclopediaController {
     @Autowired
     private GarbageEncyclopediaService garbageEncyclopediaService;
+
     @GetMapping("{typeId}")
     @ApiOperation(value = "分类查询垃圾数据")
     public R<List<GarbageEncyclopedia>> getGarbageEncyclopedia(@PathVariable @ApiParam("类别编号，1其他垃圾，2可回收垃圾，3厨余垃圾，4有害垃圾") String typeId){
@@ -37,13 +38,13 @@ public class GarbageEncyclopediaController {
     }
 
     @GetMapping("/random")
-    @ApiOperation(value = "随机15个垃圾数据")
+    @ApiOperation(value = "随机10个垃圾数据,做知识竞赛数据")
     public R<List<GarbageEncyclopedia>> getGarbageEncyclopediaRandom(){
         List<GarbageEncyclopedia> list = garbageEncyclopediaService.list();
         Collections.shuffle(list);
-        List<GarbageEncyclopedia> randomSeries = list.subList(0, 15);
+        List<GarbageEncyclopedia> randomSeries = list.subList(0, 10);
         return R.ok(randomSeries);
-    }
+        }
 
 }
 
