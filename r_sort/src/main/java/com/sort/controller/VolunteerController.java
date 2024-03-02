@@ -2,12 +2,11 @@ package com.sort.controller;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.sort.Enum.ResponMsg;
-import com.sort.constant.PageConstant;
 import com.sort.constant.VolunteerConstant;
 import com.sort.entity.Volunteer;
 import com.sort.service.VolunteerService;
 import io.swagger.annotations.Api;
-import io.swagger.models.auth.In;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +24,7 @@ public class VolunteerController {
     VolunteerService volunteerService;
 
     @GetMapping("/getVolunteerList")
+    @ApiOperation(value = "查询志愿服务列表")
     public R<List<Volunteer>> getVolunteerList(@RequestParam Integer pageNum,
                                             @RequestParam Integer pageSize){
 
@@ -33,6 +33,7 @@ public class VolunteerController {
     }
 
     @GetMapping("/getVolunteerDetail")
+    @ApiOperation(value = "查询志愿服务详情")
     public R<Volunteer> getVolunteerDetail(@RequestParam String volunteerId){
         if (StringUtils.isBlank (volunteerId)){
             R.failed(ResponMsg.VOLUNTEER_ID_ERROR.msg()).setCode (ResponMsg.VOLUNTEER_ID_ERROR.status ( ));
@@ -42,6 +43,7 @@ public class VolunteerController {
     }
 
     @GetMapping("/getVolunteerByRegion")
+    @ApiOperation(value = "根据地区查询志愿服务列表")
     public R<List<Volunteer>> getVolunteerByRegion(@RequestParam String region){
         if (region.equals ("") || region==null){
             R.failed(ResponMsg.VOLUNTEER_REGION_ERROR.msg()).setCode (ResponMsg.VOLUNTEER_REGION_ERROR.status ());
@@ -52,6 +54,7 @@ public class VolunteerController {
 
     @GetMapping("/reqVolunteer")
     @Transactional
+    @ApiOperation(value = "定时0点请求获取i志愿接口数据")
     public R<Integer> reqVolunteer(){
         Integer integer = volunteerService.reqVolunteer (VolunteerConstant.volunteer_request_number);
         return  integer>=0?R.ok (integer).setCode (ResponMsg.Success.status ( )):R.failed (ResponMsg.VOLUNTEER_REQUSET_ERROR.msg());
