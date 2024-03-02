@@ -25,7 +25,7 @@ public class ArticleController {
                                              @RequestParam Integer pageSize){
         //传参设置判断
         if (page==null || pageSize==null){
-            R.failed(ResponMsg.ARTICLE_PAGESIZE_ERROR.msg());
+            R.failed(ResponMsg.ARTICLE_PAGESIZE_ERROR.msg()).setCode (ResponMsg.ARTICLE_PAGESIZE_ERROR.status ());
         }
         //传参小于0判断
         if (page<=0 ||pageSize <= 0){
@@ -40,16 +40,16 @@ public class ArticleController {
             page = pageLimit;
         }
         List<Article> articleList = articleService.getArticleList (page, pageSize);
-        return R.ok (articleList);
+        return R.ok (articleList).setCode (ResponMsg.Success.status ( ));
     }
 
     @GetMapping("/articleDetail")
     public R<Article> queryArticleDetil(@RequestParam Integer articleId){
         if (articleId==null){
-            R.failed(ResponMsg.ARTICLE_ID_ERROR.msg());
+            R.failed(ResponMsg.ARTICLE_ID_ERROR.msg()).setCode (ResponMsg.ARTICLE_ID_ERROR.status ());
         }
         Article articleDetil = articleService.getArticleDetil(articleId);
-        return R.ok (articleDetil);
+        return R.ok (articleDetil).setCode (ResponMsg.Success.status ( ));
     }
 
 

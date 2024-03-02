@@ -2,6 +2,7 @@ package com.sort.controller;
 
 
 import com.baomidou.mybatisplus.extension.api.R;
+import com.sort.Enum.ResponMsg;
 import com.sort.entity.GarbageEncyclopedia;
 import com.sort.service.GarbageEncyclopediaService;
 import io.swagger.annotations.Api;
@@ -34,7 +35,7 @@ public class GarbageEncyclopediaController {
     @ApiOperation(value = "分类查询垃圾数据")
     public R<List<GarbageEncyclopedia>> getGarbageEncyclopedia(@PathVariable @ApiParam("类别编号，1其他垃圾，2可回收垃圾，3厨余垃圾，4有害垃圾") String typeId){
         List<GarbageEncyclopedia> list = garbageEncyclopediaService.selectByType(typeId);
-        return R.ok(list);
+        return R.ok(list).setCode (ResponMsg.Success.status ( ));
     }
 
     @GetMapping("/random")
@@ -43,7 +44,7 @@ public class GarbageEncyclopediaController {
         List<GarbageEncyclopedia> list = garbageEncyclopediaService.list();
         Collections.shuffle(list);
         List<GarbageEncyclopedia> randomSeries = list.subList(0, 10);
-        return R.ok(randomSeries);
+        return R.ok(randomSeries).setCode (ResponMsg.Success.status ( ));
         }
 
 }

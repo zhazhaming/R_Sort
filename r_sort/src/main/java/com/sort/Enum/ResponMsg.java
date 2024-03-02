@@ -2,6 +2,7 @@ package com.sort.Enum;
 
 public enum ResponMsg {
 
+    Success(200,true,"请求成功"),
     ARTICLE_PAGESIZE_ERROR(505,false,"文章分页设置错误，请重试！！"),
     ARTICLE_ID_ERROR(506,false,"文章id错误，请重试！！"),
     VOLUNTEER_PAGESIZE_ERROR(507,false,"志愿者分页设置错误，请重试！！"),
