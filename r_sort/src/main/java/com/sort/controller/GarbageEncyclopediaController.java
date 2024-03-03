@@ -47,5 +47,12 @@ public class GarbageEncyclopediaController {
         return R.ok(randomSeries).setCode (ResponMsg.Success.status ( ));
         }
 
+    @GetMapping("/name/{names}")
+    @ApiOperation(value = "根据垃圾名称模糊查询")
+    public R getGarbageList(@PathVariable(value = "names") String names) {
+        List<GarbageEncyclopedia> list = garbageEncyclopediaService.getByName(names);
+        return R.ok(list).setCode (ResponMsg.Success.status ( ));
+    }
+
 }
 

@@ -1,11 +1,15 @@
 package com.sort.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.sort.entity.GarbageEncyclopedia;
 import com.sort.mapper.GarbageEncyclopediaMapper;
 import com.sort.service.GarbageEncyclopediaService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -36,4 +40,6 @@ public class GarbageEncyclopediaServiceImpl extends ServiceImpl<GarbageEncyclope
         List<GarbageEncyclopedia> garbageEncyclopedias = baseMapper.selectList(wrapperEncyclopedia);
         return garbageEncyclopedias;
     }
+
+
 }

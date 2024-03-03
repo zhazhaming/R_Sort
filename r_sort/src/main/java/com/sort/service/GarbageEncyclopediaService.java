@@ -18,4 +18,5 @@ public interface GarbageEncyclopediaService extends IService<GarbageEncyclopedia
     List<GarbageEncyclopedia> getByName(String name);
 
     List<GarbageEncyclopedia> selectByType(String typeId);
+
 }
