@@ -3,9 +3,11 @@ package com.sort.controller;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.sort.Enum.ResponMsg;
 import com.sort.entity.User;
+import com.sort.entity.vo.UserVo;
 import com.sort.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +25,14 @@ public class UserController {
             return R.failed(ResponMsg.USER_LOGIN_ERROR.msg());
         }
         User user = userService.searchUser(condition, password);
-        return R.ok(user).setCode(200);
+        if (user != null) return R.ok(user).setCode(200).setMsg (ResponMsg.USER_LOGIN_SUCCESS.msg ( ));
+        return R.ok (user).setCode (200).setMsg (ResponMsg.USER_LOGIN_NULL.msg ());
+    }
+
+    @Transactional
+    @PostMapping("/register")
+    public R<Boolean> register(UserVo uservo){
+        return R.ok(userService.createUser (uservo)).setCode(200);
     }
 
     @GetMapping("/check")
@@ -36,6 +45,13 @@ public class UserController {
         }
         Boolean isTrue = count>0?true:false;
         return R.ok(isTrue).setCode(200);
+    }
+
+    @Transactional
+    @PostMapping("/updateScore")
+    public R<Boolean> updateScore(String username, int score){
+        boolean updateScore = userService.updateScore (username, score);
+        return R.ok (updateScore).setCode (200);
     }
 
     public boolean search(String target, char s){

@@ -3,6 +3,7 @@ package com.sort.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sort.entity.User;
 import com.sort.entity.vo.AdminVo;
+import com.sort.entity.vo.UserVo;
 
 /**
  * @Author: zhazhaming
@@ -10,7 +11,7 @@ import com.sort.entity.vo.AdminVo;
  */
 public interface UserService extends IService<User> {
 
-    public boolean createUser(User user);
+    public boolean createUser(UserVo uservo);
 
     public User searchUser(String condition,String password);
 
@@ -18,5 +19,5 @@ public interface UserService extends IService<User> {
 
     public int searchByEmail(String email);
 
-
+    public boolean updateScore(String username,int score);
 }

@@ -3,6 +3,8 @@ package com.sort.Enum;
 public enum ResponMsg {
 
     Success(200,true,"请求成功"),
+    USER_LOGIN_SUCCESS(200,true,"登录成功"),
+    USER_LOGIN_NULL(200,true,"未查询到用户"),
     ARTICLE_PAGESIZE_ERROR(505,false,"文章分页设置错误，请重试！！"),
     ARTICLE_ID_ERROR(506,false,"文章id错误，请重试！！"),
     VOLUNTEER_PAGESIZE_ERROR(507,false,"志愿者分页设置错误，请重试！！"),
@@ -12,6 +14,7 @@ public enum ResponMsg {
     ADMIN_LOGIN_PARAMERROR(510,false,"管理员名称和密码不能为空，请重试！！"),
     ADMIN_NOT_EXIT_ERROR(511,false,"管理员不存在或密码错误"),
     USER_LOGIN_ERROR(512,false,"用户名或者密码错误");
+
 
 
 
