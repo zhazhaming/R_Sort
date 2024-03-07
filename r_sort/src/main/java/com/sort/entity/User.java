@@ -3,6 +3,7 @@ package com.sort.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,4 +41,7 @@ public class User {
 
     @TableField("img_url")
     private String imgUrl;
+
+    @TableField("sign")
+    private Integer sign;
 }

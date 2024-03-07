@@ -19,5 +19,7 @@ public interface UserService extends IService<User> {
 
     public int searchByEmail(String email);
 
-    public boolean updateScore(String username,int score);
+    public boolean updateScoreAndSign(String username,int score);
+
+    public boolean updateSign();
 }

@@ -50,7 +50,7 @@ public class UserController {
     @Transactional
     @PostMapping("/updateScore")
     public R<Boolean> updateScore(String username, int score){
-        boolean updateScore = userService.updateScore (username, score);
+        boolean updateScore = userService.updateScoreAndSign (username, score);
         return R.ok (updateScore).setCode (200);
     }
 

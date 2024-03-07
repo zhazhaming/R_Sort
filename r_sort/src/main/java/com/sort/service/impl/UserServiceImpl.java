@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -50,12 +51,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean updateScore(String username,int score) {
+    public boolean updateScoreAndSign(String username,int score) {
         User user = this.getOne (new LambdaQueryWrapper<User> (  ).eq (User::getUsername,username));
         int score1 = user.getScore ();
-        user.setScore (score1+5);
-        this.saveOrUpdate (user);
-        return true;
+        user.setScore (score1+score);
+        user.setSign (1);
+        boolean saveOrUpdate = this.saveOrUpdate (user);
+        return saveOrUpdate;
+    }
+
+    @Override
+    public boolean updateSign() {
+        List<User> userList = this.list (new LambdaQueryWrapper<User> ( ).select (User::getId, User::getUsername, User::getPassword, User::getEmail, User::getScore, User::getSign, User::getScore, User::getImgUrl));
+        for (User users: userList) {
+            users.setSign (0);
+        }
+        boolean save = this.saveOrUpdateBatch (userList,userList.size ());
+        return save;
     }
 
     public boolean search(String target, char s){
