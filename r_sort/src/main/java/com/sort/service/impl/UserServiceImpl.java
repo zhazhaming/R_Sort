@@ -23,9 +23,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setImgUrl (imgUrl);
         user.setScore (0);
         user.setCreateTime (new Date (  ));
+        user.setSign (0);
         boolean save = this.save(user);
         return save;
     }
+
 
     @Override
     public User searchUser(String condition, String password) {

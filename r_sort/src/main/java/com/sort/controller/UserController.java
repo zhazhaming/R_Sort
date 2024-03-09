@@ -32,7 +32,9 @@ public class UserController {
     @Transactional
     @PostMapping("/register")
     public R<Boolean> register(UserVo uservo){
-        return R.ok(userService.createUser (uservo)).setCode(200);
+        boolean isRegister = userService.createUser (uservo);
+        if (isRegister) return R.ok(isRegister).setCode(200).setMsg (ResponMsg.USER_REGISTER_SUCCESS.msg ());
+        return R.ok(isRegister).setCode(ResponMsg.USER_REGISTER_ERROR.status ()).setMsg (ResponMsg.USER_REGISTER_ERROR.msg ());
     }
 
     @GetMapping("/check")
