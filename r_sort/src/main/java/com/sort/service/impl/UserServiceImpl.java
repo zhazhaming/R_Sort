@@ -6,6 +6,7 @@ import com.sort.entity.User;
 import com.sort.entity.vo.UserVo;
 import com.sort.mapper.UserMapper;
 import com.sort.service.UserService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -42,24 +43,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public int searchByName(String username) {
+    public User getUserInfo(String condition) {
+        User user = new User();
+        if (search(condition,'@')){
+            user = this.getOne(new LambdaQueryWrapper<User>().eq (User::getEmail,condition));
+        }else {
+            user = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, condition));
+        }
+        user.setPassword ("");
+        return user;
+    }
+
+    @Override
+    public int searchCountByName(String username) {
 
         return this.count(new LambdaQueryWrapper<User>().eq(User::getUsername,username));
     }
 
     @Override
-    public int searchByEmail(String email) {
+    public int searchCountByEmail(String email) {
         return  this.count(new LambdaQueryWrapper<User>().eq(User::getEmail,email));
     }
 
     @Override
-    public boolean updateScoreAndSign(String username,int score) {
+    public int updateScoreAndSign(String username, int score) {
         User user = this.getOne (new LambdaQueryWrapper<User> (  ).eq (User::getUsername,username));
         int score1 = user.getScore ();
         user.setScore (score1+score);
         user.setSign (1);
         boolean saveOrUpdate = this.saveOrUpdate (user);
-        return saveOrUpdate;
+        return saveOrUpdate?score1+score:0;
     }
 
     @Override

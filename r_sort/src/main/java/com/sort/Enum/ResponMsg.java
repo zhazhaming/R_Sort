@@ -15,7 +15,8 @@ public enum ResponMsg {
     ADMIN_LOGIN_PARAMERROR(510,false,"管理员名称和密码不能为空，请重试！！"),
     ADMIN_NOT_EXIT_ERROR(511,false,"管理员不存在或密码错误"),
     USER_LOGIN_ERROR(512,false,"用户名或者密码错误"),
-    USER_REGISTER_ERROR(513,false,"注册失败,请联系管理员"),;
+    USER_REGISTER_ERROR(513,false,"注册失败,请联系管理员"),
+    USER_UPDATA_SCORE_ERROR(514,false,"加积分失败"),;
 
 
 

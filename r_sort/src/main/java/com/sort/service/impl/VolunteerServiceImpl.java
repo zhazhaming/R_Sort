@@ -50,7 +50,7 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         baseMapper.selectPage(volunteerPage, volunteerLambdaQueryWrapper);
         List<Volunteer> VolunteerList = volunteerPage.getRecords();
         // 获取当前时间，筛选过期数据
-        List<Volunteer> volunteerResList = VolunteerList.stream ( ).filter (v -> v.getEndDate ( ).isAfter (LocalDate.now ( ).atStartOfDay ())).collect(Collectors.toList());
+        List<Volunteer> volunteerResList = VolunteerList.stream ( ).filter (v -> v.getStartDate ( ).isAfter (LocalDate.now ( ).atStartOfDay ())).collect(Collectors.toList());
         return volunteerResList;
     }
 

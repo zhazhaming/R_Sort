@@ -15,11 +15,13 @@ public interface UserService extends IService<User> {
 
     public User searchUser(String condition,String password);
 
-    public int searchByName(String username);
+    public User getUserInfo(String condition);
 
-    public int searchByEmail(String email);
+    public int searchCountByName(String username);
 
-    public boolean updateScoreAndSign(String username,int score);
+    public int searchCountByEmail(String email);
+
+    public int updateScoreAndSign(String username,int score);
 
     public boolean updateSign();
 }

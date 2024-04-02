@@ -19,6 +19,14 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/userInfo")
+    public R<User> userInfo(String condition){
+        // condition 为用户名或邮箱
+        System.out.println ("1111" );
+        User user = userService.getUserInfo (condition);
+        return R.ok(user).setCode(200).setMsg (ResponMsg.Success.msg ());
+    }
+
     @PostMapping("/login")
     public R<User> login(String condition, String password){
         if (condition==null || password==null){
@@ -41,19 +49,22 @@ public class UserController {
     public R<Boolean> check(String condition){
         int count = 0;
         if (search(condition,'@')){
-            count = userService.searchByEmail(condition);
+            count = userService.searchCountByEmail(condition);
         }else {
-            count = userService.searchByName(condition);
+            count = userService.searchCountByName(condition);
         }
         Boolean isTrue = count>0?true:false;
-        return R.ok(isTrue).setCode(200);
+        return R.ok(isTrue).setCode(200).setMsg (ResponMsg.Success.msg ());
     }
 
     @Transactional
     @PostMapping("/updateScore")
-    public R<Boolean> updateScore(String username, int score){
-        boolean updateScore = userService.updateScoreAndSign (username, score);
-        return R.ok (updateScore).setCode (200);
+    public R<Integer> updateScore(String username, int score){
+        int updateScore = userService.updateScoreAndSign (username, score);
+        if (updateScore>0){
+            return R.ok (updateScore).setCode (200);
+        }
+        return R.ok (updateScore).setCode (ResponMsg.USER_UPDATA_SCORE_ERROR.status ()).setMsg (ResponMsg.USER_UPDATA_SCORE_ERROR.msg ());
     }
 
     public boolean search(String target, char s){
