@@ -30,14 +30,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public String wxLogin(UserVo userVo) {
-//        Map<String, Object> map = new HashMap<> ();
-//        map.put ("appid",userVo.getAppid ());
-//        map.put ("secret",userVo.getAppSceret ());
-//        map.put ("js_code",userVo.getCode ());
-//        map.put ("grant_type","authorization_code");
+        // 调用微信接口
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+userVo.getAppid ()+"&secret="+userVo.getAppSceret ()+"&js_code="+userVo.getCode ()+"&grant_type=authorization_code";
         RequestLoginVo requestLoginVo = restTemplateUtil.post (url, RequestLoginVo.class);
         System.out.println (requestLoginVo );
+        //如果不存在就添加用户
         if (!isExist (requestLoginVo.getOpenid ())){
             User user = new User (  );
             BeanUtils.copyProperties (userVo,user);
@@ -50,6 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Map<String,Object> map1 =new HashMap<> (  );
         map1.put ("openid",requestLoginVo.getOpenid ());
         map1.put ("sessionkey",requestLoginVo.getSession_key ());
+        //返回令牌
         return jwtUtil.createToken (map1);
     }
 

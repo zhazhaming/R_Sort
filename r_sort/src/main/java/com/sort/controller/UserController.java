@@ -34,17 +34,4 @@ public class UserController {
         return R.ok (token).setMsg (ResponMsg.Success.msg ()).setCode (ResponMsg.Success.status ());
     }
 
-    @PostMapping("/test")
-    public R<RequestLoginVo> test(){
-        Map<String, Object> map = new HashMap<> ();
-        String appid = "wx8b5515246d31aede";
-        String  secret = "e94d75e317a404349bd1fbc36aef8b87";
-        String js_code = "0a3Gl10006cjSR1yjh100LZ7rH3Gl104";
-
-        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code="+js_code+"&grant_type=authorization_code";
-        RequestLoginVo requestLoginVo = restTemplateUtil.post (url, RequestLoginVo.class);
-        System.out.println (requestLoginVo );
-        return R.ok (requestLoginVo).setMsg (ResponMsg.Success.msg ()).setCode (ResponMsg.Success.status ());
-    }
-
 }
