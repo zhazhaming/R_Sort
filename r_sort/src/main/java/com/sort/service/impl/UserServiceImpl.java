@@ -3,92 +3,73 @@ package com.sort.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sort.entity.User;
+import com.sort.entity.vo.RequestLoginVo;
 import com.sort.entity.vo.UserVo;
 import com.sort.mapper.UserMapper;
 import com.sort.service.UserService;
+import com.sort.util.JwtUtil;
+import com.sort.util.RestTemplateUtil;
 import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Autowired
+    RestTemplateUtil restTemplateUtil;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
     @Override
-    public boolean createUser(UserVo uservo) {
-        String imgUrl = "http://47.115.231.19:8888/group1/M00/00/00/L3PnE2Xn1byAAa6PAAAXsbiK4hg124.png";
-        User user = new User (  );
-        BeanUtils.copyProperties (uservo,user);
-        user.setImgUrl (imgUrl);
-        user.setScore (0);
-        user.setCreateTime (new Date (  ));
-        user.setSign (0);
-        boolean save = this.save(user);
+    public String wxLogin(UserVo userVo) {
+//        Map<String, Object> map = new HashMap<> ();
+//        map.put ("appid",userVo.getAppid ());
+//        map.put ("secret",userVo.getAppSceret ());
+//        map.put ("js_code",userVo.getCode ());
+//        map.put ("grant_type","authorization_code");
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+userVo.getAppid ()+"&secret="+userVo.getAppSceret ()+"&js_code="+userVo.getCode ()+"&grant_type=authorization_code";
+        RequestLoginVo requestLoginVo = restTemplateUtil.post (url, RequestLoginVo.class);
+        System.out.println (requestLoginVo );
+        if (!isExist (requestLoginVo.getOpenid ())){
+            User user = new User (  );
+            BeanUtils.copyProperties (userVo,user);
+            user.setScore (0);
+            user.setOpenid (requestLoginVo.getOpenid ());
+            user.setSessionKey (requestLoginVo.getSession_key ());
+            user.setUnionId (requestLoginVo.getOpenid ());
+            boolean user1 = createUser (user);
+        }
+        Map<String,Object> map1 =new HashMap<> (  );
+        map1.put ("openid",requestLoginVo.getOpenid ());
+        map1.put ("sessionkey",requestLoginVo.getSession_key ());
+        return jwtUtil.createToken (map1);
+    }
+
+    public boolean createUser(User user){
+        boolean save = this.save (user);
         return save;
     }
 
-
-    @Override
-    public User searchUser(String condition, String password) {
-
-        User user = new User();
-        if (search(condition,'@')){
-        user = this.getOne(new LambdaQueryWrapper<User>().eq (User::getEmail,condition).eq (User::getPassword,password));
-        }else {
-            user = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, condition).eq (User::getPassword,password));
-        }
-        return user;
-    }
-
-    @Override
-    public User getUserInfo(String condition) {
-        User user = new User();
-        if (search(condition,'@')){
-            user = this.getOne(new LambdaQueryWrapper<User>().eq (User::getEmail,condition));
-        }else {
-            user = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, condition));
-        }
-        user.setPassword ("");
-        return user;
-    }
-
-    @Override
-    public int searchCountByName(String username) {
-
-        return this.count(new LambdaQueryWrapper<User>().eq(User::getUsername,username));
-    }
-
-    @Override
-    public int searchCountByEmail(String email) {
-        return  this.count(new LambdaQueryWrapper<User>().eq(User::getEmail,email));
-    }
-
-    @Override
-    public int updateScoreAndSign(String username, int score) {
-        User user = this.getOne (new LambdaQueryWrapper<User> (  ).eq (User::getUsername,username));
-        int score1 = user.getScore ();
-        user.setScore (score1+score);
-        user.setSign (1);
-        boolean saveOrUpdate = this.saveOrUpdate (user);
-        return saveOrUpdate?score1+score:0;
+    public boolean isExist(String openid){
+        User user = this.getOne (new LambdaQueryWrapper<User> ().eq (User::getOpenid, openid));
+        return true? user!=null:false;
     }
 
     @Override
     public boolean updateSign() {
-        List<User> userList = this.list (new LambdaQueryWrapper<User> ( ).select (User::getId, User::getUsername, User::getPassword, User::getEmail, User::getScore, User::getSign, User::getScore, User::getImgUrl));
+        List<User> userList = this.list (new LambdaQueryWrapper<User> ( ));
         for (User users: userList) {
             users.setSign (0);
         }
         boolean save = this.saveOrUpdateBatch (userList,userList.size ());
         return save;
-    }
-
-    public boolean search(String target, char s){
-        for (int i = 0; i <target.length() ; i++) {
-            if (s == target.charAt(i)) return true;
-        }
-        return false;
     }
 }

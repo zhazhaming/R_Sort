@@ -24,6 +24,9 @@ public class Image {
     @TableField("id")
     private int id;
 
+    @TableField("mark")
+    private int mark;
+
     @TableField("type")
     private String type;
 

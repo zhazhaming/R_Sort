@@ -22,9 +22,16 @@ public class ImageController {
     ImageService imageService;
 
     @GetMapping("/random")
-    @ApiOperation(value = "随机返回X个图片url")
+    @ApiOperation(value = "随机返回n个图片url")
     public R <List<String>> get_random_picture(@RequestParam Integer pageSize){
         List<String> UrlList = imageService.getImageUrl(pageSize);
+        return R.ok(UrlList).setCode(ResponMsg.Success.status ( ));
+    }
+
+    @GetMapping("/randomVideo")
+    @ApiOperation(value = "随机返回n个视频url")
+    public R <List<String>> get_random_video(@RequestParam Integer pageSize){
+        List<String> UrlList = imageService.getVideoUrl(pageSize);
         return R.ok(UrlList).setCode(ResponMsg.Success.status ( ));
     }
 }

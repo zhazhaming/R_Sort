@@ -14,6 +14,10 @@ import lombok.NoArgsConstructor;
 public class UserVo {
 
     private String username;
-    private String password;
-    private String email;
+    private int gender;
+    private String img_url;
+    private String appid;
+    private String appSceret;
+    private String code;
+
 }

@@ -1,15 +1,14 @@
 package com.sort.util;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,13 @@ public class RestTemplateUtil {
     public RestTemplateUtil() {
         // 创建 RestTemplate 实例
         restTemplate = new RestTemplate ();
+        // 支持text/plan,text/html格式
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
+                MediaType.TEXT_HTML,
+                MediaType.TEXT_PLAIN));
+        restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
+
 
         // 设置请求工厂，用于处理HTTPS请求
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory ();
@@ -52,6 +58,29 @@ public class RestTemplateUtil {
 
     public <T> T get(String url, Class<T> responseType, Map<String, ?> uriVariables) {
         ResponseEntity<T> responseEntity = restTemplate.getForEntity(url, responseType, uriVariables);
+        return responseEntity.getBody();
+    }
+
+    public <T> T post(String url, Class<T> responseType) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 创建 HttpEntity 对象，将请求头信息添加到其中
+        HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+
+        // 发起 POST 请求，并传递 HttpEntity 对象作为请求参数
+        ResponseEntity<T> responseEntity = restTemplate.postForEntity(url, requestEntity, responseType);
+
+        // 处理响应
+        return responseEntity.getBody();
+    }
+
+    public <T> T post(String url, Class<T> responseType, Map<String, ?> uriVariables) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<?> requestEntity = new HttpEntity<>(uriVariables, headers);
+        ResponseEntity<T> responseEntity = restTemplate.postForEntity(url, requestEntity, responseType);
         return responseEntity.getBody();
     }
 

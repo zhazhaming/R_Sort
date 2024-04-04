@@ -8,4 +8,6 @@ import java.util.List;
 public interface ImageService extends IService<Image> {
 
     public List<String> getImageUrl(Integer pageSize);
+
+    public List<String> getVideoUrl(Integer pageSize);
 }

@@ -3,12 +3,17 @@ package com.sort.controller;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.sort.Enum.ResponMsg;
 import com.sort.entity.User;
+import com.sort.entity.vo.RequestLoginVo;
 import com.sort.entity.vo.UserVo;
 import com.sort.service.UserService;
+import com.sort.util.RestTemplateUtil;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @Api(description = "用户端接口")
@@ -19,59 +24,27 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/userInfo")
-    public R<User> userInfo(String condition){
-        // condition 为用户名或邮箱
-        System.out.println ("1111" );
-        User user = userService.getUserInfo (condition);
-        return R.ok(user).setCode(200).setMsg (ResponMsg.Success.msg ());
+    @Autowired
+    RestTemplateUtil restTemplateUtil;
+
+    @PostMapping("/wx_login")
+    public R<String> wxLogin(@RequestBody UserVo userVo){
+        String token = userService.wxLogin (userVo);
+        System.out.println (token );
+        return R.ok (token).setMsg (ResponMsg.Success.msg ()).setCode (ResponMsg.Success.status ());
     }
 
-    @PostMapping("/login")
-    public R<User> login(String condition, String password){
-        if (condition==null || password==null){
-            return R.failed(ResponMsg.USER_LOGIN_ERROR.msg());
-        }
-        User user = userService.searchUser(condition, password);
-        if (user != null) return R.ok(user).setCode(200).setMsg (ResponMsg.USER_LOGIN_SUCCESS.msg ( ));
-        return R.ok (user).setCode (200).setMsg (ResponMsg.USER_LOGIN_NULL.msg ());
-    }
+    @PostMapping("/test")
+    public R<RequestLoginVo> test(){
+        Map<String, Object> map = new HashMap<> ();
+        String appid = "wx8b5515246d31aede";
+        String  secret = "e94d75e317a404349bd1fbc36aef8b87";
+        String js_code = "0a3Gl10006cjSR1yjh100LZ7rH3Gl104";
 
-    @Transactional
-    @PostMapping("/register")
-    public R<Boolean> register(UserVo uservo){
-        boolean isRegister = userService.createUser (uservo);
-        if (isRegister) return R.ok(isRegister).setCode(200).setMsg (ResponMsg.USER_REGISTER_SUCCESS.msg ());
-        return R.ok(isRegister).setCode(ResponMsg.USER_REGISTER_ERROR.status ()).setMsg (ResponMsg.USER_REGISTER_ERROR.msg ());
-    }
-
-    @GetMapping("/check")
-    public R<Boolean> check(String condition){
-        int count = 0;
-        if (search(condition,'@')){
-            count = userService.searchCountByEmail(condition);
-        }else {
-            count = userService.searchCountByName(condition);
-        }
-        Boolean isTrue = count>0?true:false;
-        return R.ok(isTrue).setCode(200).setMsg (ResponMsg.Success.msg ());
-    }
-
-    @Transactional
-    @PostMapping("/updateScore")
-    public R<Integer> updateScore(String username, int score){
-        int updateScore = userService.updateScoreAndSign (username, score);
-        if (updateScore>0){
-            return R.ok (updateScore).setCode (200);
-        }
-        return R.ok (updateScore).setCode (ResponMsg.USER_UPDATA_SCORE_ERROR.status ()).setMsg (ResponMsg.USER_UPDATA_SCORE_ERROR.msg ());
-    }
-
-    public boolean search(String target, char s){
-        for (int i = 0; i <target.length() ; i++) {
-            if (s == target.charAt(i)) return true;
-        }
-        return false;
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code="+js_code+"&grant_type=authorization_code";
+        RequestLoginVo requestLoginVo = restTemplateUtil.post (url, RequestLoginVo.class);
+        System.out.println (requestLoginVo );
+        return R.ok (requestLoginVo).setMsg (ResponMsg.Success.msg ()).setCode (ResponMsg.Success.status ());
     }
 
 }

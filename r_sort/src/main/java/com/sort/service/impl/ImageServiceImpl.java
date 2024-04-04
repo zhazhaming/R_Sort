@@ -29,7 +29,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             if (pageSize<=0) pageSize=1;
         }
         // 获取pageNum、pageSize最大边界值
-        int maxCount = this.getImageNumber();
+        int maxCount = this.getNumber(0);
         if (pageSize>maxCount) pageSize = maxCount;
         LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<Image>().select( Image::getUrl);
         List<Image> imglist = this.list (imageLambdaQueryWrapper);
@@ -38,9 +38,23 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         return randomList;
     }
 
+    @Override
+    public List<String> getVideoUrl(Integer pageSize) {
+        // 传参检查
+        if (pageSize == null || pageSize<0){
+            pageSize = 1;
+        }
+        int maxCount = getNumber (1);
+        if (pageSize>maxCount) pageSize = maxCount;
+        LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<Image>().select( Image::getUrl).eq (Image::getMark, 1);
+        List<Image> list_video = this.list (imageLambdaQueryWrapper);
+        Collections.shuffle (list_video);
+        List<String> randomList_video = list_video.stream ().map (Image::getUrl).collect(Collectors.toList()).subList (0,pageSize);
+        return randomList_video;
+    }
 
-    public Integer getImageNumber(){
-        int ImageCount = this.count(new LambdaQueryWrapper<Image>());
+    public Integer getNumber(int type){
+        int ImageCount = this.count(new LambdaQueryWrapper<Image>().eq (Image::getMark, type));
         return ImageCount;
     }
 

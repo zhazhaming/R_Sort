@@ -27,21 +27,24 @@ public class User {
     @TableField("username")
     private String username;
 
-    @TableField("password")
-    private String password;
+    @TableField("gender")
+    private int gender;
 
     @TableField("score")
     private int score;
 
-    @TableField("email")
-    private String email;
+    @TableField("openid")
+    private String openid;
 
-    @TableField("create_time")
-    private Date createTime;
+    @TableField("sessionKey")
+    private String sessionKey;
+
+    @TableField("unionId")
+    private String unionId;
 
     @TableField("img_url")
-    private String imgUrl;
+    private String img_url;
 
     @TableField("sign")
-    private Integer sign;
+    private int sign;
 }
