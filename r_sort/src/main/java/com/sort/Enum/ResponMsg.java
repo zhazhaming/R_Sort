@@ -6,6 +6,8 @@ public enum ResponMsg {
     USER_LOGIN_SUCCESS(200,true,"登录成功"),
     USER_REGISTER_SUCCESS(200,true,"注册成功"),
     USER_LOGIN_NULL(200,true,"未查询到用户"),
+    Error(500,false,"请求失败，请重试！！"),
+    PARAMETER_ERROR(501,false,"参数异常，请正确填写后重试！！"),
     ARTICLE_PAGESIZE_ERROR(505,false,"文章分页设置错误，请重试！！"),
     ARTICLE_ID_ERROR(506,false,"文章id错误，请重试！！"),
     VOLUNTEER_PAGESIZE_ERROR(507,false,"志愿者分页设置错误，请重试！！"),

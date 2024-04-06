@@ -3,6 +3,7 @@ package com.sort.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sort.entity.User;
 import com.sort.entity.vo.AdminVo;
+import com.sort.entity.vo.LoginVo;
 import com.sort.entity.vo.RequestLoginVo;
 import com.sort.entity.vo.UserVo;
 
@@ -13,8 +14,10 @@ import com.sort.entity.vo.UserVo;
 public interface UserService extends IService<User> {
 
 
-    public String wxLogin(UserVo userVo);
+    public LoginVo wxLogin(UserVo userVo);
 
     public boolean updateSign();
+
+    public int updateScore(String username, int score);
 
 }
