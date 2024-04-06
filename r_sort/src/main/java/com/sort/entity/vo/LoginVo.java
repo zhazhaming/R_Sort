@@ -21,6 +21,8 @@ public class LoginVo {
 
     private int score;
 
+    private int sign;
+
     private String token;
 
 }
