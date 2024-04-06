@@ -3,6 +3,8 @@ package com.sort.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -23,20 +26,20 @@ import java.util.Date;
 public class Article implements Serializable {
 
     @TableField("Id")
-    private int id;
+    private String id;
 
-    @TableField("Title")
-    private String Title;
+    @TableField("title")
+    private String title;
 
-    @TableField("Introduce")
-    private String Introduce;
+    @TableField("description")
+    private String description;
 
-    @TableField("Content")
-    private String Content;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Shanghai")
+    @JsonProperty("startDate")
+    @TableField("ctime")
+    private LocalDateTime ctime;
 
-    @TableField("StartTime")
-    private Date StartTime;
+    @TableField("url")
+    private String url;
 
-    @TableField("EndTime")
-    private Date EndTime;
 }

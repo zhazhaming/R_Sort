@@ -11,8 +11,10 @@ public interface ArticleService extends IService<Article> {
 
     public List<Article> getArticleList(Integer page,Integer pagesize);
 
-    public Article getArticleDetil(Integer articleId);
+    public Article getArticleDetil(String articleId);
 
     public Integer getArticleCounts();
+
+    public Integer reqArticle(int pageNumber);
 
 }
