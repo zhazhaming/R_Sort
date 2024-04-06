@@ -1,5 +1,7 @@
 package com.sort.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.AnonymousCOSCredentials;
@@ -15,13 +17,14 @@ import com.qcloud.cos.region.Region;
 import com.qcloud.cos.transfer.TransferManager;
 import com.qcloud.cos.transfer.TransferManagerConfiguration;
 import com.qcloud.cos.transfer.Upload;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.util.Base64;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,7 +33,24 @@ import java.util.concurrent.Executors;
  * @author changing
  * @create 2022-01-11 14:36
  */
+@Component
 public class SentenceRecognitionUtil {
+
+    private static String accessKeyid;
+    private static String secretkey;
+
+    @Value("${tencenyun.accessKeyId}")
+    public void setAccessKeyid(String accessKeyid) {
+        SentenceRecognitionUtil.accessKeyid = accessKeyid;
+    }
+
+    @Value("${tencenyun.accessKeySecret}")
+    public void setSecretkey(String secretkey) {
+        SentenceRecognitionUtil.secretkey = secretkey;
+    }
+
+
+
     // 创建 TransferManager 实例，这个实例用来后续调用高级接口
     static TransferManager createTransferManager() {
         // 创建一个 COSClient 实例，这是访问 COS 服务的基础实例。
@@ -65,8 +85,9 @@ public class SentenceRecognitionUtil {
     static COSClient createCOSClient() {
         // 设置用户身份信息。
         // SECRETID 和 SECRETKEY 请登录访问管理控制台 https://console.cloud.tencent.com/cam/capi 进行查看和管理
-        String secretId = "AKIDVqvjHaYFfqpa4IFvKSJtLbbKn44nFQKx";
-        String secretKey = "OWNxHK6crpWw5xYsvhDTR8YgYAVZMs63";
+
+        String secretId = accessKeyid;
+        String secretKey = secretkey;
         COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
 
         // ClientConfig 中包含了后续请求 COS 的客户端设置：
@@ -135,7 +156,7 @@ public class SentenceRecognitionUtil {
             e.printStackTrace();
         }
 
-         // 确定本进程不再使用 transferManager 实例之后，关闭之
+        // 确定本进程不再使用 transferManager 实例之后，关闭之
         // 详细代码参见本页：高级接口 -> 关闭 TransferManager
         shutdownTransferManager(transferManager);
     }
@@ -165,6 +186,37 @@ public class SentenceRecognitionUtil {
 //        key = "exampleobject";
 
         return cosclient.getObjectUrl(bucketName, key);
+    }
+
+    // 获取前端base64编码音频文件，转换为二进制流
+    public static InputStream  changeAudioFile(String audioBase64){
+        try {
+            byte[] audioBytes = Base64.getDecoder().decode(audioBase64);
+            return new ByteArrayInputStream(audioBytes);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid Base64 encoded audio data", e);
+        }
+    }
+
+    public static String getValueFromJson(String jsonString, String key) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonString);
+            JsonNode valueNode = jsonNode.get(key);
+            if (valueNode != null) {
+                return valueNode.asText();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String handleReslut(String result){
+        String resultString = result.replaceAll("，", "").replaceAll ("、","").replaceAll ("。","");
+         return resultString;
     }
 
 }

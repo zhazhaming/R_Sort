@@ -1,8 +1,8 @@
 package com.sort.controller;
 
 import com.baomidou.mybatisplus.extension.api.R;
+import com.sort.Enum.ResponMsg;
 import com.sort.util.SentenceRecognitionUtil;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import com.tencentcloudapi.asr.v20190614.AsrClient;
 import com.tencentcloudapi.asr.v20190614.models.SentenceRecognitionRequest;
 import com.tencentcloudapi.asr.v20190614.models.SentenceRecognitionResponse;
@@ -16,13 +16,16 @@ import com.tencentcloudapi.tiia.v20190529.models.DetectProductResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -35,6 +38,12 @@ import java.util.UUID;
 @CrossOrigin
 public class UploadFileController {
 
+    @Value ("${tencenyun.accessKeyId}")
+    private String accessKeyid;
+    @Value ("${tencenyun.accessKeySecret}")
+    private String secretkey;
+
+
     @PostMapping("/image")
     @ApiOperation(value = " 通过上传图像进行图像识别其垃圾分类")
     public R DetectProduct(@ApiParam(value = "base64编码") @RequestParam("imageBase64")String imgeBase64){
@@ -44,7 +53,7 @@ public class UploadFileController {
         try{
             // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey,此处还需注意密钥对的保密
             // 密钥可前往https://console.cloud.tencent.com/cam/capi网站进行获取
-            Credential cred = new Credential("AKIDVqvjHaYFfqpa4IFvKSJtLbbKn44nFQKx", "OWNxHK6crpWw5xYsvhDTR8YgYAVZMs63");
+            Credential cred = new Credential(accessKeyid, secretkey);
             // 实例化一个http选项，可选的，没有特殊需求可以跳过
             HttpProfile httpProfile = new HttpProfile();
             httpProfile.setEndpoint("tiia.tencentcloudapi.com");
@@ -72,19 +81,21 @@ public class UploadFileController {
 
     @PostMapping("/record")
     @ApiOperation(value = " 通过上传音频进行语音识别其垃圾分类")
-    public R uploadRecord(@ApiParam(value = ".mp3格式音频文件")@RequestParam("file") MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
+    public R uploadRecord(@ApiParam(value = "base64编码") @RequestParam("audioBase64")String audioBase64) {
+        System.out.println ("进入语言识别" );
+        if (StringUtils.isBlank (audioBase64)) {
             return R.failed("文件为空");
         }
         String key = UUID.randomUUID().toString();
-        SentenceRecognitionUtil.upload(file.getInputStream(),key);
+        InputStream audioInputStream = SentenceRecognitionUtil.changeAudioFile (audioBase64);
+        SentenceRecognitionUtil.upload(audioInputStream,key);
         URL url = SentenceRecognitionUtil.getObjectUrl(key);
-
+        System.out.println (url );
         SentenceRecognitionResponse resp = null;
         try{
             // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey,此处还需注意密钥对的保密
             // 密钥可前往https://console.cloud.tencent.com/cam/capi网站进行获取
-            Credential cred = new Credential("AKIDVqvjHaYFfqpa4IFvKSJtLbbKn44nFQKx", "OWNxHK6crpWw5xYsvhDTR8YgYAVZMs63");
+            Credential cred = new Credential(accessKeyid, secretkey);
             // 实例化一个http选项，可选的，没有特殊需求可以跳过
             HttpProfile httpProfile = new HttpProfile();
             httpProfile.setEndpoint("asr.tencentcloudapi.com");
@@ -107,7 +118,10 @@ public class UploadFileController {
             // 输出json格式的字符串回包
             String data = SentenceRecognitionResponse.toJsonString(resp);
             System.out.println( data);
-            return R.ok(data);
+            //从json中获取reslt字符
+            String result = SentenceRecognitionUtil.getValueFromJson (data, "Result");
+            result = SentenceRecognitionUtil.handleReslut (result);
+            return R.ok(result).setCode (ResponMsg.Success.status ( ));
         } catch (TencentCloudSDKException e) {
             System.out.println(e.toString());
             return R.failed(e.toString());
