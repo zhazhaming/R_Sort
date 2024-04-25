@@ -33,7 +33,7 @@ public class User {
     @TableField("score")
     private int score;
 
-    @TableField("openid")
+    @TableField("openId")
     private String openid;
 
     @TableField("sessionKey")

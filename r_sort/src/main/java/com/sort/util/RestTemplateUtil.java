@@ -45,6 +45,7 @@ public class RestTemplateUtil {
         requestFactory.setConnectTimeout(CONNECT_TIMEOUT);
         requestFactory.setReadTimeout(READ_TIMEOUT);
 
+
         // 应用请求工厂设置到 RestTemplate
         restTemplate.setRequestFactory(requestFactory);
     }

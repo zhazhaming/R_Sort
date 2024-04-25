@@ -31,7 +31,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         // 获取pageNum、pageSize最大边界值
         int maxCount = this.getNumber(0);
         if (pageSize>maxCount) pageSize = maxCount;
-        LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<Image>().select( Image::getUrl);
+        LambdaQueryWrapper<Image> imageLambdaQueryWrapper = new LambdaQueryWrapper<Image>().select( Image::getUrl).eq (Image::getMark, 0);
         List<Image> imglist = this.list (imageLambdaQueryWrapper);
         Collections.shuffle(imglist);
         List<String> randomList = imglist.stream ().map (Image::getUrl).collect(Collectors.toList()).subList (0,pageSize);

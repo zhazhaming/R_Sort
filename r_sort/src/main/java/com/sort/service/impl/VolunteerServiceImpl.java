@@ -46,7 +46,7 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         }
         Page<Volunteer>  volunteerPage= new Page<> (pageNum,pageSize);
         LambdaQueryWrapper<Volunteer> volunteerLambdaQueryWrapper = new LambdaQueryWrapper<Volunteer> ( ).select (Volunteer::getId, Volunteer::getMissionId, Volunteer::getDistrictName, Volunteer::getSubject,
-                Volunteer::getStartDate, Volunteer::getEndDate, Volunteer::getMissionTypeName, Volunteer::getMissionRegionName, Volunteer::getUrl).orderByDesc (Volunteer::getStartDate);
+                Volunteer::getStartDate, Volunteer::getEndDate, Volunteer::getMissionTypeName, Volunteer::getMissionRegionName, Volunteer::getUrl).orderByDesc (Volunteer::getStartDate).orderByDesc (Volunteer::getStartDate);
         baseMapper.selectPage(volunteerPage, volunteerLambdaQueryWrapper);
         List<Volunteer> VolunteerList = volunteerPage.getRecords();
         // 获取当前时间，筛选过期数据

@@ -34,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public LoginVo wxLogin(UserVo userVo) {
         // 调用微信接口
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+userVo.getAppid ()+"&secret="+userVo.getAppSceret ()+"&js_code="+userVo.getCode ()+"&grant_type=authorization_code";
-        RequestLoginVo requestLoginVo = restTemplateUtil.post (url, RequestLoginVo.class);
+        RequestLoginVo requestLoginVo = restTemplateUtil.get (url, RequestLoginVo.class);
         System.out.println (requestLoginVo );
         //如果不存在就添加用户
         if (!isExist (requestLoginVo.getOpenid ())){
@@ -82,6 +82,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return score_before;
     }
 
+    @Override
+    public int getscore(String openid) {
+        if (StringUtils.isBlank (openid)) return -1;
+        User user = this.getOne (new LambdaQueryWrapper<User> ( ).eq (User::getOpenid, openid));
+        System.out.println (user );
+        if (user!=null) return user.getScore ();
+        return -1;
+    }
+
     public boolean createUser(User user){
         boolean save = this.save (user);
         return save;
@@ -96,7 +105,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User (  );
         if (StringUtils.isNotBlank (openid)){
             user = this.getOne (new LambdaQueryWrapper<User> ().eq (User::getOpenid, openid));
-
         }
         return user;
     }

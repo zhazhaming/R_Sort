@@ -15,5 +15,5 @@ public class ArticleApiRequest {
 
     private String code;
     private String msg;
-    private ArticleApiData<VolunteerApiData> result;
+    private ArticleApiData<ArticleApiData> result;
 }

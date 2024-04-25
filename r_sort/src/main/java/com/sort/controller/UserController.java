@@ -9,6 +9,7 @@ import com.sort.entity.vo.UserVo;
 import com.sort.service.UserService;
 import com.sort.util.RestTemplateUtil;
 import io.swagger.annotations.Api;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,15 @@ public class UserController {
         Integer result = userService.updateScore (username, score);
         if (result>0) return R.ok (result).setMsg (ResponMsg.Success.msg ()).setCode (ResponMsg.Success.status ());
         return R.failed (ResponMsg.USER_UPDATA_SCORE_ERROR.msg ());
+    }
+
+    @GetMapping("/getScore")
+    public R<Integer> getscore(@RequestParam String openid){
+        int getscore = userService.getscore (openid);
+        if (getscore == -1){
+            return R.failed ("用户不存在或者openid错误");
+        }
+        return R.ok(getscore).setCode (ResponMsg.Success.status ());
     }
 
 }

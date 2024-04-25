@@ -20,4 +20,6 @@ public interface UserService extends IService<User> {
 
     public int updateScore(String username, int score);
 
+    public int getscore(String openid);
+
 }
